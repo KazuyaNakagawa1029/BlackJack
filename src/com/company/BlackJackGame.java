@@ -80,7 +80,6 @@ public class BlackJackGame {
                 addDrawnCards(playerCards);
                 addDrawnCards(dealerCards);
                 cardStuck.Shuffle();
-                continue;
             } else {
                 break;
             }
