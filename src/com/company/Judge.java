@@ -57,7 +57,7 @@ public class Judge {
         } else if (playerCardsNumberSum == dealerCardsNumberSum) {
             _judgementResultName = "引き分け";
             _judgementResultNumber = 2;
-        } else if (playerCardsNumberSum < dealerCardsNumberSum) {
+        } else {
             _judgementResultName = "負け";
             _judgementResultNumber = 1;
         }

@@ -34,7 +34,7 @@ public class Card implements Comparable<Card> {
      * @return S1~C13の文字列
      */
     public static String convertCardIndexToDisplayString(int cardIndex) {
-        String dispNumber = "";
+        String dispNumber;
         //カードマーク部分のIndexを取得
         int cardMark = getCardMarkNumber(cardIndex);
         //カードの番号部分を取得
@@ -80,9 +80,8 @@ public class Card implements Comparable<Card> {
         return cardIndex % CARD_NUMBER + 1;
     }
 
-    private int _cardIndex = -1;
-    private int _cardMark = -1;
-    private int _cardNumber = -1;
+    private final int _cardIndex;
+    private final int _cardNumber;
 
     /**
      * カードIndex(0~51)の取得
@@ -94,23 +93,11 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * @return S, H, D, Cの文字列
-     */
-    public int get_cardMark() {
-        return _cardMark;
-    }
-
-    /**
      * @return 1~13のカード番号
      */
     public int get_cardNumber() {
         return _cardNumber;
     }
-
-    /**
-     * 画面に表示するカード文字列
-     * @return 例：S2 H13
-     */
 
     /**
      * コンストラクタ
@@ -119,7 +106,6 @@ public class Card implements Comparable<Card> {
      */
     public Card(int cardIndex) {
         this._cardIndex = cardIndex;
-        _cardMark = Card.getCardMarkNumber(cardIndex);
         _cardNumber = Card.getCardNumber(cardIndex);
     }
 

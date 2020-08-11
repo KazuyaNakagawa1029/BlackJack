@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BlackJackGame {
 
-    private CardStuck cardStuck = new CardStuck();
+    private final CardStuck cardStuck = new CardStuck();
     //プレイヤー側のカードが入ったリスト
     public List<Card> playerCards;
     //ディーラー側のカードが入ったリスト
@@ -205,8 +205,7 @@ public class BlackJackGame {
     private void showAllDealerCards() {
         Hand dealerHand = new Hand(dealerCards);
         System.out.print("ディーラー: ");
-        for (int i = 0; i < dealerCards.size(); i++) {
-            Card dealerCard = dealerCards.get(i);
+        for (Card dealerCard : dealerCards) {
             if (dealerHand._isNaturalBlackJack()) {
                 System.out.print(CYAN + dealerCard.getDisplayString() + RESET + " ");
             } else {
@@ -230,8 +229,8 @@ public class BlackJackGame {
      * @param drawnCards リストから引き抜かれたカード
      */
     private void addDrawnCards(List<Card> drawnCards) {
-        for (int i = 0; i < drawnCards.size(); i++) {
-            cardStuck.cards.add(drawnCards.get(i));
+        for (Card drawnCard : drawnCards) {
+            cardStuck.cards.add(drawnCard);
         }
     }
 

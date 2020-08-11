@@ -26,13 +26,13 @@ public class Hand {
         int isSum = 0;
         int isOverTen = 0;
         boolean isAce = false;
-        for (int i = 0; i < _Cards.size(); i++) {
-            isSum += _Cards.get(i).get_cardNumber();
+        for (Card card : _Cards) {
+            isSum += card.get_cardNumber();
 
-            if (_Cards.get(i).get_cardNumber() > 9) {
-                isOverTen = _Cards.get(i).get_cardNumber() - 10;
+            if (card.get_cardNumber() > 9) {
+                isOverTen = card.get_cardNumber() - 10;
             }
-            if (_Cards.get(i).get_cardNumber() == 1) {
+            if (card.get_cardNumber() == 1) {
                 isAce = true;
             }
             isSum -= isOverTen;
