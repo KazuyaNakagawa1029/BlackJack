@@ -144,7 +144,7 @@ public class BlackJackGame {
      * ディーラーにカードを2枚配る
      */
     private void deliveryDealerCard() {
-        dealerCards = cardStuck.takeCards(3);
+        dealerCards = cardStuck.takeCards(2);
     }
 
     /**
