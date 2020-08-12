@@ -31,6 +31,7 @@ public class CardStuck {
      * 使用する前にシャッフルを呼び出す事
      */
     public void createNewStack() {
+        cards = new ArrayList<>();
         // カード山に52枚のカードを積み込む
         for (int i = 0; i < Card.CARD_ALL_NUMBER; i++) {
             Card card = new Card(i);

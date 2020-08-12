@@ -70,8 +70,7 @@ public class BlackJackGame {
 
             //yesと入力された場合は引いたカードを戻しゲームを再開する
             if (selectHitOrStand.equalsIgnoreCase("yes") || selectHitOrStand.equals("")) {
-                addDrawnCards(playerCards);
-                addDrawnCards(dealerCards);
+               cardStuck.createNewStack();
                 cardStuck.Shuffle();
             } else {
                 break;
@@ -200,18 +199,6 @@ public class BlackJackGame {
             System.out.println("(" + dealerHand.isHandPoint() + ")");
         }
         System.out.println();
-    }
-
-    /**
-     * リストから抜いたカードを一回のゲームが終わると
-     * リストの中に戻すメソッド
-     *
-     * @param drawnCards リストから引き抜かれたカード
-     */
-    private void addDrawnCards(List<Card> drawnCards) {
-        for (Card drawnCard : drawnCards) {
-            cardStuck.cards.add(drawnCard);
-        }
     }
 
 }
