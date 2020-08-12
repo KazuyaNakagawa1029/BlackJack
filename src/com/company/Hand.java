@@ -23,25 +23,22 @@ public class Hand {
      * @return カードの合計値
      */
     public int isHandPoint() {
-        int isSum = 0;
-        int isOverTen = 0;
+        int Sum = 0;
         boolean isAce = false;
         for (Card card : _Cards) {
-            isSum += card.get_cardNumber();
-
             if (card.get_cardNumber() > 9) {
-                isOverTen = card.get_cardNumber() - 10;
+                Sum+=10;
+            }else{
+                Sum+=card.get_cardNumber();
             }
             if (card.get_cardNumber() == 1) {
                 isAce = true;
             }
-            isSum -= isOverTen;
-            isOverTen = 0;
         }
-        if (isAce && 12 > isSum) {
-            isSum += 10;
+        if (isAce && 12 > Sum) {
+            Sum += 10;
         }
-        return isSum;
+        return Sum;
     }
 
     /**
@@ -49,7 +46,7 @@ public class Hand {
      *
      * @return
      */
-    public boolean _isNaturalBlackJack() {
+    public boolean isNaturalBlackJack() {
         for (int i = 0; i < _Cards.size(); i++) {
             if (cardsNumberSum == 21 && _Cards.size() == 2) {
                 return true;

@@ -11,12 +11,9 @@ public class Judge {
         return _judgementResultNumber;
     }
 
-    public List<Card> _playerCards;
-    public List<Card> _dealerCards;
-    public int playerCardsNumberSum;
-    public int dealerCardsNumberSum;
     private String _judgementResultName = " ";
     private int _judgementResultNumber;
+    public static final int BURST_NUMBER=21;
 
     /**
      * Handクラスを呼び出し判定を行う
@@ -25,30 +22,30 @@ public class Judge {
      * @param dealerCards 　ディーラーのカードが入ったリスト
      */
     public void setResult(List<Card> playerCards, List<Card> dealerCards) {
-        _playerCards = playerCards;
-        _dealerCards = dealerCards;
+        List<Card> _playerCards = playerCards;
+        List<Card> _dealerCards = dealerCards;
         Hand playerHand = new Hand(_playerCards);
         Hand dealerHand = new Hand(_dealerCards);
-        playerCardsNumberSum = playerHand.isHandPoint();
-        dealerCardsNumberSum = dealerHand.isHandPoint();
+        int playerCardsNumberSum = playerHand.isHandPoint();
+        int dealerCardsNumberSum = dealerHand.isHandPoint();
 
 
-        if (playerHand._isNaturalBlackJack() && dealerHand._isNaturalBlackJack()) {
+        if (playerHand.isNaturalBlackJack() && dealerHand.isNaturalBlackJack()) {
             _judgementResultName = "引き分け";
             _judgementResultNumber = 2;
-        } else if (dealerHand._isNaturalBlackJack()) {
+        } else if (dealerHand.isNaturalBlackJack()) {
             _judgementResultName = "負け";
             _judgementResultNumber = 1;
-        } else if (playerHand._isNaturalBlackJack()) {
+        } else if (playerHand.isNaturalBlackJack()) {
             _judgementResultName = "勝ち";
             _judgementResultNumber = 0;
-        } else if (playerCardsNumberSum > 21 && dealerCardsNumberSum > 21) {
+        } else if (playerCardsNumberSum > BURST_NUMBER && dealerCardsNumberSum > BURST_NUMBER) {
             _judgementResultName = "負け";
             _judgementResultNumber = 1;
-        } else if (dealerCardsNumberSum > 21) {
+        } else if (dealerCardsNumberSum > BURST_NUMBER) {
             _judgementResultName = "勝ち";
             _judgementResultNumber = 0;
-        } else if (playerCardsNumberSum > 21) {
+        } else if (playerCardsNumberSum > BURST_NUMBER) {
             _judgementResultName = "負け";
             _judgementResultNumber = 1;
         } else if (playerCardsNumberSum > dealerCardsNumberSum) {

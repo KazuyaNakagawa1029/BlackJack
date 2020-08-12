@@ -9,18 +9,14 @@ public class BlackJackGame {
 
     private final CardStuck cardStuck = new CardStuck();
     //プレイヤー側のカードが入ったリスト
-    public List<Card> playerCards;
+    private List<Card> playerCards;
     //ディーラー側のカードが入ったリスト
-    public List<Card> dealerCards;
-    //プレイヤー側の合計得点
-    public int playerCardsNumberSum;
-    //ディーラー側の合計得点
-    public int dealerCardsNumberSum;
+    private List<Card> dealerCards;
     //バーストした際に合計値を赤に変える
-    public static final String RED = "\u001B[31m";
+    private static final String RED = "\u001B[31m";
     //ナチュラルブラックジャックが出た際にカードの色を変える
-    public static final String CYAN = "\u001b[00;36m";
-    public static final String RESET = "\u001B[0m";
+    private static final String CYAN = "\u001b[00;36m";
+    private static final String RESET = "\u001B[0m";
 
     //通算の勝敗をカウント
     int[] count = {0, 0, 0};
@@ -36,37 +32,33 @@ public class BlackJackGame {
         while (true) {
             //プレイヤーにカードを配る
             deliveryPlayerCard();
-//            playerCards.set(0, new Card(0));
-//            playerCards.set(1, new Card(13));
 
             //ディーラーにカードを配る
             deliveryDealerCard();
-//            dealerCards.set(0, new Card(13));
-//            dealerCards.set(1, new Card(22));
 
-            Hand playerHand = new Hand(playerCards);
-            Hand dealerHand = new Hand(dealerCards);
-
-            //点数の計算を行う
-            playerCardsNumberSum = playerHand.isHandPoint();
-            dealerCardsNumberSum = dealerHand.isHandPoint();
             //カードの表示
             showDealerCards();
             showPlayerCards();
+
             //プレイヤーがカードを引く
             drawPlayerCard();
+
             //ディーラーが得点数が17を超えるまでカードを引き続ける
             drawDealerCard();
+
             //最終のカードを表示
             showAllDealerCards();
             showPlayerCards();
+
             //Judgeクラスを呼び出し判定を行う
             Judge judge = new Judge();
             judge.setResult(playerCards, dealerCards);
+
             //判定結果を表示する
-            System.out.println(judge.get_judgementResultName());
+            System.out.println("勝敗:"+judge.get_judgementResultName());
             count[judge.get_judgementResultNumber()]++;
-            System.out.println(count[0] + "勝" + count[1] + "敗" + count[2] + "分");
+            System.out.println("通算成績："+count[0] + "勝" + count[1] + "敗" + count[2] + "分");
+
             //ゲームを続けるか辞めるかの入力を促すメッセージを表示する
             Msg.showContinueMsg();
             String selectHitOrStand = " ";
@@ -75,6 +67,7 @@ public class BlackJackGame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             //yesと入力された場合は引いたカードを戻しゲームを再開する
             if (selectHitOrStand.equalsIgnoreCase("yes") || selectHitOrStand.equals("")) {
                 addDrawnCards(playerCards);
@@ -102,7 +95,7 @@ public class BlackJackGame {
         System.out.print("あ　な　た: ");
         for (Card playerCard : playerCards) {
             //ブラックジャックが出た際にカードの色を変更する
-            if (playerHand._isNaturalBlackJack()) {
+            if (playerHand.isNaturalBlackJack()) {
                 System.out.print(CYAN + playerCard.getDisplayString() + RESET + " ");
             } else {
                 System.out.print(playerCard.getDisplayString() + " ");
@@ -110,12 +103,11 @@ public class BlackJackGame {
         }
 
         //バーストした際に合計値を赤に変える
-        if (playerCardsNumberSum > 21) {
-            System.out.println("(" + RED + playerCardsNumberSum + RESET + ")");
+        if (playerHand.isHandPoint() > Judge.BURST_NUMBER) {
+            System.out.println("(" + RED + playerHand.isHandPoint() + RESET + ")");
         } else {
-            System.out.println("(" + playerCardsNumberSum + ")");
+            System.out.println("(" + playerHand.isHandPoint() + ")");
         }
-        System.out.println();
         System.out.println();
     }
 
@@ -125,7 +117,6 @@ public class BlackJackGame {
     private void drawPlayerCard() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Hand playerHand = new Hand(playerCards);
-        playerCardsNumberSum = playerHand.isHandPoint();
         while (true) {
             Msg.showDrawCardMsg();
             String playerDrawCardResponse = "";
@@ -138,9 +129,8 @@ public class BlackJackGame {
             if (playerDrawCardResponse.equalsIgnoreCase("yes")) {
                 Card newPlayerCard = cardStuck.takeCard();
                 playerCards.add(newPlayerCard);
-                playerCardsNumberSum = playerHand.isHandPoint();
                 //バーストした時点で終了する
-                if (playerCardsNumberSum > 21) {
+                if (playerHand.isHandPoint() >Judge.BURST_NUMBER) {
                     break;
                 }
                 showPlayerCards();
@@ -154,7 +144,7 @@ public class BlackJackGame {
      * ディーラーにカードを2枚配る
      */
     private void deliveryDealerCard() {
-        dealerCards = cardStuck.takeCards(2);
+        dealerCards = cardStuck.takeCards(3);
     }
 
     /**
@@ -162,15 +152,13 @@ public class BlackJackGame {
      */
     private void drawDealerCard() {
         Hand dealerHand = new Hand(dealerCards);
-        dealerCardsNumberSum = dealerHand.isHandPoint();
         while (true) {
-            if (dealerCardsNumberSum > 16) {
+            if (dealerHand.isHandPoint()>=17) {
                 break;
             }
             Card newCard = cardStuck.takeCard();
             dealerCards.add(newCard);
-            dealerCardsNumberSum = dealerHand.isHandPoint();
-            if (dealerCardsNumberSum < 17) {
+            if (dealerHand.isHandPoint() <= 17) {
                 continue;
             }
             break;
@@ -187,15 +175,8 @@ public class BlackJackGame {
             if (i == 0) {
                 System.out.print(dealerCard.getDisplayString() + " ");
             }
-            System.out.print("*" + " ");
+            System.out.print("*");
         }
-        //バーストした際に合計値を赤に変える
-        if (dealerCardsNumberSum > 21) {
-            System.out.println("(" + RED + dealerCardsNumberSum + RESET + ")");
-        } else {
-            System.out.println("(" + dealerCardsNumberSum + ")");
-        }
-        System.out.println();
         System.out.println();
     }
 
@@ -206,19 +187,18 @@ public class BlackJackGame {
         Hand dealerHand = new Hand(dealerCards);
         System.out.print("ディーラー: ");
         for (Card dealerCard : dealerCards) {
-            if (dealerHand._isNaturalBlackJack()) {
+            if (dealerHand.isNaturalBlackJack()) {
                 System.out.print(CYAN + dealerCard.getDisplayString() + RESET + " ");
             } else {
                 System.out.print(dealerCard.getDisplayString() + " ");
             }
         }
         //バーストした際に合計値を赤に変える
-        if (dealerCardsNumberSum > 21) {
-            System.out.println("(" + RED + dealerCardsNumberSum + RESET + ")");
+        if (dealerHand.isHandPoint() > Judge.BURST_NUMBER) {
+            System.out.println("(" + RED + dealerHand.isHandPoint() + RESET + ")");
         } else {
-            System.out.println("(" + dealerCardsNumberSum + ")");
+            System.out.println("(" + dealerHand.isHandPoint() + ")");
         }
-        System.out.println();
         System.out.println();
     }
 
